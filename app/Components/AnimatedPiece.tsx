@@ -128,6 +128,35 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
     ]).start()
   }
 
+  // drag the piece to a random side quickly, then drag it back and to the other side, then back to center
+  const swing = (props?:PaceProps) => {
+    const left = typeof props?.left === "boolean" ? props.left : Math.random() > 0.5
+    const distance = props?.distance || 100
+    const secondsLength = props?.secondsLength || 1000
+  
+    Animated.sequence([
+      Animated.timing(animatedX, {
+        // pick a side and slide horizontally slowly
+        toValue: distance * (left ? -1 : 1),
+        duration: 0.33 * secondsLength,
+        useNativeDriver: true,
+      }),
+      Animated.timing(animatedX, {
+        // pick a side and slide horizontally slowly
+        toValue: distance * (left ? 1 : -1),
+        duration: 0.66 * secondsLength,
+        useNativeDriver: true,
+      }),
+      Animated.delay(0.1 * secondsLength),
+      // slide back
+      Animated.timing(animatedX, {
+        toValue: 0,
+        duration: 0.33 * secondsLength,
+        useNativeDriver: true,
+      }),
+    ]).start()
+  }
+
   // fling up, starting to shake half way, then fall down, bouncing back into place (vertically and rotationally) as you land
   // currently the props only affect the jump portion of jumpShake
   const jumpShake = (props?:JumpProps) => {
@@ -284,6 +313,7 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
     fallOffAndRespawn,
     jumpShake,
     zoomOutAndBackIn,
+    swing,
   }));
 
 
@@ -342,6 +372,7 @@ export type AnimatedPieceFunctions = {
   fallOffAndRespawn: () => void;
   jumpShake: (props?:JumpProps) => void;
   zoomOutAndBackIn: () => void;
+  swing: (props?:PaceProps) => void;
 }
 
 type PaceProps = {

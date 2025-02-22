@@ -37,7 +37,6 @@ export const QuestionGame: FunctionComponent<{}> = ({
   // add memory so we dont show questions we've already shown until we go through all of them
   const [curQuestion, setCurQuestion] = useState<Card>({text: "Poop", icon: questionIcon})
   const [nextQuestion, setNextQuestion] = useState<Card>({text: "More poop", icon: questionIcon})
-  const [hideDescription, setHideDescription] = useState<number>(1)
 
   useEffect(() => {
     setCurQuestion(getCard())
@@ -60,13 +59,11 @@ export const QuestionGame: FunctionComponent<{}> = ({
               secondSuit={curQuestion.secondIcon}
               secondDetail={undefined}
               description={undefined}
-              hideDescription={hideDescription === 0}
               typed
               game={"SingleCardGame"}
               onPress={() => {
+                setNextQuestion(getCard())
                 flipRef?.current?.flip()
-                setTimeout(() => setHideDescription(0), 1010)
-                setTimeout(() => setCurQuestion(getCard()), 1000)
               }}
             />
             <Card
@@ -77,13 +74,11 @@ export const QuestionGame: FunctionComponent<{}> = ({
               secondSuit={nextQuestion.secondIcon}
               secondDetail={undefined}
               description={undefined}
-              hideDescription={hideDescription === 1}
               typed
               game={"SingleCardGame"}
               onPress={() => {
+                setCurQuestion(getCard())
                 flipRef?.current?.flip()
-                setTimeout(() => setHideDescription(1), 1010)
-                setTimeout(() => setNextQuestion(getCard()), 1000)
               }}
             />
           </CardFlip>

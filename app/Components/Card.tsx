@@ -21,7 +21,6 @@ export type CardProps = {
   firstDetail?: string;
   secondDetail?: string;
   game?: "CardAndTextGame" | "SingleCardGame";
-  hideDescription?: boolean;
 };
 
 export const Card: FunctionComponent<CardProps> = ({
@@ -33,7 +32,6 @@ export const Card: FunctionComponent<CardProps> = ({
   firstDetail,
   secondDetail,
   game,
-  hideDescription,
   onPress
 }) => {
   const curGame = game || "SingleCardGame"
@@ -69,6 +67,18 @@ export const Card: FunctionComponent<CardProps> = ({
         topAnimations.current?.pace({left: !left, ...curStyle.paceContents})
         botAnimations.current?.pace({left: !left, ...curStyle.paceContents})
     }, 300)
+  }
+
+  const swing = () => {
+    const left = Math.random() > 0.5
+    containerAnimations.current?.swing({left, ...curStyle.paceContainer})
+    // the contents of the card slide in the opposite direction a tiny bit to simulate drag/weight
+    setTimeout(() => {
+        //nameAnimations.current?.swing({left: !left, ...curStyle.paceContents})
+        //descriptionAnimations.current?.swing({left: !left, ...curStyle.paceContents})
+        topAnimations.current?.swing({left: !left, ...curStyle.paceContents})
+        botAnimations.current?.swing({left: !left, ...curStyle.paceContents})
+    }, 50)
   }
   
   const jump = () => {
@@ -118,13 +128,18 @@ export const Card: FunctionComponent<CardProps> = ({
       randomAnimationInterval.current = setInterval(() => {
         // our animation options
         const animations = [
+          shake,
           pace,
+          jump,
+          jumpShake,
           zoomOutAndBackIn,
+          fallOffAndRespawn,
+          swing
         ]
         // pick one at random and do it
         animations[Math.floor(Math.random() * animations.length)]?.()
         // wait 10-25 seconds
-      }, 5000)
+      }, 10000 + Math.random() * 15000)
     }
     // clear interval on unmount
     return () => {
@@ -212,37 +227,32 @@ export const Card: FunctionComponent<CardProps> = ({
               >
                 <Flex full>
                 <Typewriter startFull={!typed} centered>
-        <StyledText type={curStyle.text.name}>{name}</StyledText>
-      </Typewriter>
+                  <StyledText type={curStyle.text.name}>{name}</StyledText>
+                </Typewriter>
                 </Flex>
               </AnimatedPiece>
             </Flex>
           }
           {firstDetail && (
-            
-    <Flex flex={1} centered>
-    <AnimatedPiece
-      startingWidth={curStyle.container.width - curStyle.container.padding * 2}
-      ref={topAnimations}
-      overrideHeight={typed ? (firstDetail.length/14) * 50: undefined}
-    >
-      <Flex centered>
-        <Flex row>
-              
-      {
-        firstDetail &&
-          <Flex fullWidth style={{opacity: hideDescription ? 0 : 1}}>
-            <Typewriter startFull={!typed} centered>
-              <StyledText type={curStyle.text.details} style={{ color: firstColor }}>
-                {firstDetail}
-              </StyledText>
-            </Typewriter>
+            <Flex flex={1} centered>
+              <AnimatedPiece
+                startingWidth={curStyle.container.width - curStyle.container.padding * 2}
+                ref={topAnimations}
+                overrideHeight={typed ? (firstDetail.length/14) * 50: undefined}
+              >
+                <Flex centered>
+                  <Flex row>
+                    <Flex fullWidth >
+                      <Typewriter startFull={!typed} centered>
+                        <StyledText type={curStyle.text.details} style={{ color: firstColor }}>
+                          {firstDetail}
+                        </StyledText>
+                      </Typewriter>
+                    </Flex>
+                </Flex>
+              </Flex>
+            </AnimatedPiece>
           </Flex>
-      }
-      </Flex>
-    </Flex>
-  </AnimatedPiece>
-</Flex>
           )}
           {secondDetail && (
                 <Flex flex={1} centered>
@@ -254,37 +264,32 @@ export const Card: FunctionComponent<CardProps> = ({
                   <Flex centered>
                     <Flex row>
                       {props.children}
-              
-      {
-        secondDetail &&
-        <Flex fullWidth>
-          <Typewriter startFull={!typed} centered>
-            <StyledText type={curStyle.text.details} style={{ color: secondColor }}>
-              {secondDetail}
-            </StyledText>
-          </Typewriter>
-          </Flex>
-      }
-            
-            </Flex>
+                        <Flex fullWidth>
+                          <Typewriter startFull={!typed} centered>
+                            <StyledText type={curStyle.text.details} style={{ color: secondColor }}>
+                              {secondDetail}
+                            </StyledText>
+                          </Typewriter>
+                          </Flex>
+                      </Flex>
                   </Flex>
                 </AnimatedPiece>
               </Flex>
           )}
           {description && (
-    <Flex flex={2} centered>
-      <AnimatedPiece
-        startingWidth={curStyle.container.width - curStyle.container.padding * 2}
-        ref={descriptionAnimations}
-        overrideHeight={typed ? (description.length/14) * 50: undefined}
-      >
-        <Flex full>
-      <Typewriter startFull={!typed} centered>
-        <StyledText type={curStyle.text.description}>{description}</StyledText>
-      </Typewriter>
-        </Flex>
-      </AnimatedPiece>
-    </Flex>
+            <Flex flex={2} centered>
+              <AnimatedPiece
+                startingWidth={curStyle.container.width - curStyle.container.padding * 2}
+                ref={descriptionAnimations}
+                overrideHeight={typed ? (description.length/14) * 50: undefined}
+              >
+                <Flex full>
+              <Typewriter startFull={!typed} centered>
+                <StyledText type={curStyle.text.description}>{description}</StyledText>
+              </Typewriter>
+                </Flex>
+              </AnimatedPiece>
+            </Flex>
           )}
         
         </View>
