@@ -55,7 +55,7 @@ const styles = {
       fontWeight: "bold" as "bold",
     },
     body: {
-      fontSize: 30,
+      fontSize: 26,
     },
     caption: {
       fontSize: 20,

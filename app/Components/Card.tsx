@@ -223,7 +223,7 @@ export const Card: FunctionComponent<CardProps> = ({
               <AnimatedPiece
                 startingWidth={curStyle.container.width - curStyle.container.padding * 2}
                 ref={nameAnimations}
-                overrideHeight={typed ? (name.length/14) * 50: undefined}
+                overrideHeight={typed ? (Math.floor(name.length/10)+1) * 35: undefined}
               >
                 <Flex full>
                 <Typewriter startFull={!typed} centered>
@@ -238,7 +238,7 @@ export const Card: FunctionComponent<CardProps> = ({
               <AnimatedPiece
                 startingWidth={curStyle.container.width - curStyle.container.padding * 2}
                 ref={topAnimations}
-                overrideHeight={typed ? (firstDetail.length/14) * 50: undefined}
+                overrideHeight={typed ? (Math.floor(firstDetail.length/10)+1) * 35: undefined}
               >
                 <Flex centered>
                   <Flex row>
@@ -259,7 +259,7 @@ export const Card: FunctionComponent<CardProps> = ({
                 <AnimatedPiece
                   startingWidth={curStyle.container.width - curStyle.container.padding * 2}
                   ref={botAnimations}
-                  overrideHeight={typed ? (secondDetail.length/14) * 50: undefined}
+                  overrideHeight={typed ? (Math.floor(secondDetail.length/10)+1) * 35: undefined}
                 >
                   <Flex centered>
                     <Flex row>
@@ -281,7 +281,7 @@ export const Card: FunctionComponent<CardProps> = ({
               <AnimatedPiece
                 startingWidth={curStyle.container.width - curStyle.container.padding * 2}
                 ref={descriptionAnimations}
-                overrideHeight={typed ? (description.length/14) * 50: undefined}
+                overrideHeight={typed ? (Math.floor(description.length/10)+1) * 35: undefined}
               >
                 <Flex full>
               <Typewriter startFull={!typed} centered>
@@ -319,8 +319,8 @@ const styles = {
   }),
   SingleCardGame: StyleSheet.create({
     container: {
-      height: 420,
-      width: 300,
+      height: 350,
+      width: 230,
       borderRadius: 35,
       margin: 35,
       padding: 35,

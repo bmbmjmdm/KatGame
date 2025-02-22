@@ -45,10 +45,10 @@ export const QuestionGame: FunctionComponent<{}> = ({
 
   return (
     <AnimatedScreen>
-        <Flex centered centeredVertical full style={{marginTop: -100}}>
+        <Flex centered centeredVertical full>
           <CardFlip
-            expectedHeight={350}
-            expectedWidth={350}
+            expectedHeight={420}
+            expectedWidth={300}
             ref={flipRef}
             >
             <Card
