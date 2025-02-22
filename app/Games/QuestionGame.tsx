@@ -56,7 +56,7 @@ export const QuestionGame: FunctionComponent<{}> = ({
               name={undefined}
               firstSuit={curQuestion.icon}
               firstDetail={curQuestion.text}
-              secondSuit={curQuestion.secondIcon}
+              secondSuit={curQuestion.icon}
               secondDetail={undefined}
               description={undefined}
               typed
@@ -71,7 +71,7 @@ export const QuestionGame: FunctionComponent<{}> = ({
               name={undefined}
               firstSuit={nextQuestion.icon}
               firstDetail={nextQuestion.text}
-              secondSuit={nextQuestion.secondIcon}
+              secondSuit={nextQuestion.icon}
               secondDetail={undefined}
               description={undefined}
               typed
