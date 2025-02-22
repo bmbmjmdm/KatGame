@@ -118,17 +118,13 @@ export const Card: FunctionComponent<CardProps> = ({
       randomAnimationInterval.current = setInterval(() => {
         // our animation options
         const animations = [
-          shake,
           pace,
-          jump,
-          jumpShake,
           zoomOutAndBackIn,
-          fallOffAndRespawn
         ]
         // pick one at random and do it
         animations[Math.floor(Math.random() * animations.length)]?.()
         // wait 10-25 seconds
-      }, 10000 + Math.random() * 15000)
+      }, 5000)
     }
     // clear interval on unmount
     return () => {

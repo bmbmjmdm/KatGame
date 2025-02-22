@@ -89,20 +89,20 @@ const CardFlipComponent: FunctionComponent<CardFlipProps> = (
       Animated.timing(progress, {
         toValue: side === 0 ? 100 : 0,
         duration,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
       // zoom in and then out (scale up and then down) in for depth effect
       Animated.sequence([
         Animated.timing(zoom, {
           toValue: 100,
           duration: duration / 2,
-          useNativeDriver: false,
+          useNativeDriver: true,
           easing: Easing.linear
         }),
         Animated.timing(zoom, {
           toValue: 0,
           duration: duration / 2,
-          useNativeDriver: false,
+          useNativeDriver: true,
           easing: Easing.linear
         }),
       ]),
@@ -110,12 +110,12 @@ const CardFlipComponent: FunctionComponent<CardFlipProps> = (
       Animated.timing(rotationX, {
         toValue: toValue.x,
         duration,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
       Animated.timing(rotationY, {
         toValue: toValue.y,
         duration,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
     ]).start(() => {
       // callback

@@ -26,21 +26,21 @@ export const AnimatedScreen: FunctionComponent<AnimatedScreenProps> = ({
       Animated.timing(animatedOpacity, {
         toValue: 1,
         duration: 850,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
       // slide up
       Animated.timing(animatedTop, {
         toValue: 0,
         easing: easeOutBack,
         duration: 850,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
     ]).start();
   }, []);
 
   return (
     <Animated.View
-      style={{ flex: 1, top: animatedTop, opacity: animatedOpacity }}
+      style={{ flex: 1, transform: [{translateX: animatedTop }], opacity: animatedOpacity }}
     >
       {children}
     </Animated.View>

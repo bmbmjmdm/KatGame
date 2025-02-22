@@ -34,50 +34,50 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
       Animated.timing(animatedRotate, {
         toValue: severity,
         duration: 50,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
       // then the other
       Animated.timing(animatedRotate, {
         toValue: -severity,
         duration: 100,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
       //so on
       Animated.timing(animatedRotate, {
         toValue: severity,
         duration: 100,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
       Animated.timing(animatedRotate, {
         toValue: -severity,
         duration: 100,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
       Animated.timing(animatedRotate, {
         toValue: severity,
         duration: 100,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
       Animated.timing(animatedRotate, {
         toValue: -severity,
         duration: 100,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
       Animated.timing(animatedRotate, {
         toValue: severity,
         duration: 100,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
       Animated.timing(animatedRotate, {
         toValue: -severity,
         duration: 100,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
       // return to center
       Animated.timing(animatedRotate, {
         toValue: 0,
         duration: 100,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
     ]).start()
   }
@@ -93,14 +93,14 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
         toValue: 0.75,
         duration: 550,
         easing: Easing.out(Easing.exp),
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
       // slide back
       Animated.timing(animatedScale, {
         toValue: 1,
         duration: 550,
         easing: Easing.exp,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
     ]).start()
   }
@@ -116,14 +116,14 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
         // pick a side and slide horizontally slowly
         toValue: distance * (left ? -1 : 1),
         duration: 3 * secondsLength,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
       Animated.delay(2 * secondsLength),
       // slide back
       Animated.timing(animatedX, {
         toValue: 0,
         duration: 3 * secondsLength,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
     ]).start()
   }
@@ -145,24 +145,24 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
         Animated.timing(animatedRotate, {
           toValue: 0.02,
           duration: 50,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         // then the other
         Animated.timing(animatedRotate, {
           toValue: -0.02,
           duration: 100,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         //so on
         Animated.timing(animatedRotate, {
           toValue: 0.02,
           duration: 100,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         Animated.timing(animatedRotate, {
           toValue: -0.02,
           duration: 100,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         // delay so we can freeze leaned-back, then tilt to center while bouncing from landing
         Animated.delay(300),
@@ -170,7 +170,7 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
         Animated.timing(animatedRotate, {
           toValue: 0,
           duration: 100,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
       ]),
       // jump
@@ -180,14 +180,14 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
           toValue: inverse ? distance : -distance,
           duration: secondsLength * 0.5,
           easing: Easing.out(Easing.sin),
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         // go down, accelerating
         Animated.timing(animatedY, {
           toValue: 0,
           duration: secondsLength * 0.75,
           easing: Easing.bounce,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
       ])
     ]).start();
@@ -205,14 +205,14 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
         toValue: inverse ? distance : -distance,
         duration: secondsLength * 0.5,
         easing: Easing.out(Easing.sin),
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
       // go down, accelerating
       Animated.timing(animatedY, {
         toValue: 0,
         duration: secondsLength * 0.75,
         easing: Easing.bounce,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
     ]).start();
   }
@@ -226,50 +226,50 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
           toValue: 2000,
           duration: 1500,
           easing: Easing.sin,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         // at the same time, rotate slightly as if we just fell
         Animated.timing(animatedRotate, {
           toValue: 0.05,
           duration: 1000,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         // at the same time, move back a little bit to improve the fall look
         Animated.timing(animatedX, {
           toValue: -10,
           duration: 1000,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
       ]),
       // after the fall (and the piece is off-screen), make it disappear
       Animated.timing(animatedOpacity, {
         toValue: 0,
         duration: 1,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
       // reset the position and rotation of the piece
       Animated.parallel([
         Animated.timing(animatedY, {
           toValue: 0,
           duration: 1,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         Animated.timing(animatedX, {
           toValue: 0,
           duration: 1,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         Animated.timing(animatedRotate, {
           toValue: 0,
           duration: 1,
-          useNativeDriver: false,
+          useNativeDriver: true,
         })
       ]),
       // now that its reset, fade it back in
       Animated.timing(animatedOpacity, {
         toValue: 1,
         duration: 700,
-        useNativeDriver: false,
+        useNativeDriver: true,
       })
     ]).start();
   }
