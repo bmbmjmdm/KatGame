@@ -166,7 +166,7 @@ const questions = [
     icon: questionIcon,
   },
   {
-    text: "Make yourself laugh",
+    text: "Make yourself laugh (by saying/doing something you find funny)",
     icon: questionIcon,
   },
   {
@@ -213,6 +213,14 @@ const questions = [
     text: "Point to something and explain why its so cool",
     icon: questionIcon,
   },
+  {
+    text: "Give an object a backstory",
+    icon: questionIcon
+  },
+  {
+    text: "Create a conspiracy theory and I'll ask questions",
+    icon: questionIcon
+  },
 ]
 
 const romantic = [
@@ -244,9 +252,21 @@ const romantic = [
     text: "What do you think when you look at me?",
     icon: heartIcon,
   },
+  {
+    text: "What’s something small I do that you adore?",
+    icon: heartIcon,
+  },
+  {
+    text: "Make up a pickup line for me",
+    icon: heartIcon,
+  },
 ]
 
 const personal = [
+  {
+    text: "What’s an Unusual sensory thing (smell, etc) or experience you love?",
+    icon: personIcon,
+  },
   {
     text: "Tell a story from your past",
     icon: personIcon,
