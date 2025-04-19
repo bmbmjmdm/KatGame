@@ -1,13 +1,15 @@
 import { View } from "react-native";
 import React, { FunctionComponent, useEffect, useRef, useState } from "react";
-import { wingIcon, heartIcon, musicIcon, personIcon, questionIcon } from "../Components/Icons";
-import { Card, Flex, CardProps, AnimatedScreen, fastIcon, groupIcon  } from "../Components";
+import { wingIcon, heartIcon, musicIcon, personIcon, questionIcon, gameIcon } from "../Components/Icons";
+import { Card, Flex, CardProps, AnimatedScreen } from "../Components";
 import { CardFlip } from "../Components/CardFlip";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Card = {
   text: string,
   icon: JSX.Element,
   secondIcon?: JSX.Element,
+  smallText?: boolean,
 }
 
 export const QuestionGame: FunctionComponent<{}> = ({
@@ -16,10 +18,10 @@ export const QuestionGame: FunctionComponent<{}> = ({
   const usedCards = useRef<string[]>([])
 
   const countAllCards = () => {
-    return physical.length + musicalOrRP.length + questions.length + romantic.length + personal.length
+    return physical.length + musicalOrRP.length + questions.length + romantic.length + personal.length + games.length
   }
   const getCard = ():Card => {
-    const cardCategories = [physical, musicalOrRP, questions, romantic, personal]
+    const cardCategories = [physical, musicalOrRP, questions, romantic, personal, games]
     const randomCategory = cardCategories[Math.floor(Math.random() * cardCategories.length)]
     const randomCard = randomCategory[Math.floor(Math.random() * randomCategory.length)]
     if (usedCards.current.includes(randomCard.text)) {
@@ -30,6 +32,7 @@ export const QuestionGame: FunctionComponent<{}> = ({
     }
     else {
       usedCards.current.push(randomCard.text)
+      AsyncStorage.setItem('usedCards', JSON.stringify(usedCards.current));
       return randomCard
     }
   }
@@ -39,8 +42,13 @@ export const QuestionGame: FunctionComponent<{}> = ({
   const [nextQuestion, setNextQuestion] = useState<Card>({text: "More poop", icon: questionIcon})
 
   useEffect(() => {
-    setCurQuestion(getCard())
-    setNextQuestion(getCard())
+    const asyncCall = async () => {
+      const jsonValue = await AsyncStorage.getItem('usedCards');
+      usedCards.current = jsonValue != null ? JSON.parse(jsonValue) : [];
+      setCurQuestion(getCard())
+      setNextQuestion(getCard())
+    }
+    asyncCall()
   }, [])
 
   return (
@@ -56,6 +64,7 @@ export const QuestionGame: FunctionComponent<{}> = ({
               name={undefined}
               firstSuit={curQuestion.icon}
               firstDetail={curQuestion.text}
+              smallText={curQuestion.smallText}
               secondSuit={curQuestion.icon}
               secondDetail={undefined}
               description={undefined}
@@ -71,6 +80,7 @@ export const QuestionGame: FunctionComponent<{}> = ({
               name={undefined}
               firstSuit={nextQuestion.icon}
               firstDetail={nextQuestion.text}
+              smallText={nextQuestion.smallText}
               secondSuit={nextQuestion.icon}
               secondDetail={undefined}
               description={undefined}
@@ -95,10 +105,6 @@ const physical = [
   },
   {
     text: "Can you raise your hand before I finish this sentence?",
-    icon: wingIcon,
-  },
-  {
-    text: "Beat me at Simon says in 10 lines",
     icon: wingIcon,
   },
   {
@@ -221,6 +227,22 @@ const questions = [
     text: "Create a conspiracy theory and I'll ask questions",
     icon: questionIcon
   },
+  {
+    text: "What's the meaning of life (not a typical one, but still serious)? ",
+    icon: questionIcon
+  },
+  {
+    text: "How would you make society less fake/prescriptive/etc?",
+    icon: questionIcon
+  },
+  {
+    text: "Criticize one of my/your values that you normally agree with",
+    icon: questionIcon
+  },
+  {
+    text: "Be skeptical of a socio-political idea we normally agree with",
+    icon: questionIcon
+  }
 ]
 
 const romantic = [
@@ -263,6 +285,18 @@ const romantic = [
 ]
 
 const personal = [
+  {
+    text: "What do you think people want from you?",
+    icon: personIcon,
+  },
+  {
+    text: "Who are you?",
+    icon: personIcon,
+  },
+  {
+    text: "What do you want out of life",
+    icon: personIcon,
+  },
   {
     text: "What’s an Unusual sensory thing (smell, etc) or experience you love?",
     icon: personIcon,
@@ -310,5 +344,37 @@ const personal = [
   {
     text: "What are you proud of yourself for doing/being?",
     icon: personIcon,
+  },
+]
+
+
+const games = [
+  {
+    text: "Mini LoreCraft - Think of a few subjects for me to make a story about. Also think of a secret goal. See if my story completes the goal!",
+    icon: gameIcon,
+    smallText: true,
+  },
+  {
+    text: "Word Slip - Think of an object, the more obscure the harder. You have 3 minutes to slip it into a normal conversation. No lists!",
+    icon: gameIcon,
+    smallText: true,
+  },
+  {
+    text: "Secret - We both think of characters to roleplay as. You have a secret you don't want me to find out. You also have an obvious tell when you're lying. I have 5 minutes to find the secret.",
+    icon: gameIcon,
+    smallText: true,
+  },
+  {
+    text: "Suggestion - Get me to do something without me realising it",
+    icon: gameIcon,
+  },
+  {
+    text: "Simon Says - Beat me in 10 lines",
+    icon: gameIcon,
+  },
+  {
+    text: "\n\nThanks, Sucker - We both think of characters to roleplay as. You have a secret task. You ask me for favours, items, etc to help you complete that task. I have to figure out what you're doing before you complete it.",
+    icon: gameIcon,
+    smallText: true,
   },
 ]

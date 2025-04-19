@@ -9,6 +9,5 @@ export type { CardFlipRef } from "./CardFlip";
 export { FadeInImage } from "./FadeInImage";
 export {Card} from "./Card";
 export type { CardProps } from "./Card";
-export {PersonSVG, GroupSVG, HareSVG, TurtleSVG, HeartSVG, QuestionSVG } from "./SVG";
-export {slowIcon, soloIcon, fastIcon, groupIcon} from "./Icons";
+export {PersonSVG, HeartSVG, QuestionSVG } from "./SVG";
 export {AnimatedScreen} from "./AnimatedScreen";

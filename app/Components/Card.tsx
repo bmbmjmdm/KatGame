@@ -21,6 +21,7 @@ export type CardProps = {
   firstDetail?: string;
   secondDetail?: string;
   game?: "CardAndTextGame" | "SingleCardGame";
+  smallText?: boolean;
 };
 
 export const Card: FunctionComponent<CardProps> = ({
@@ -31,6 +32,7 @@ export const Card: FunctionComponent<CardProps> = ({
   secondSuit,
   firstDetail,
   secondDetail,
+  smallText = false,
   game,
   onPress
 }) => {
@@ -134,12 +136,12 @@ export const Card: FunctionComponent<CardProps> = ({
           jumpShake,
           zoomOutAndBackIn,
           fallOffAndRespawn,
-          swing
+          //swing
         ]
         // pick one at random and do it
         animations[Math.floor(Math.random() * animations.length)]?.()
-        // wait 10-25 seconds
-      }, 10000 + Math.random() * 15000)
+        // wait 15-60 seconds
+      }, 15000 + Math.random() * 45000)
     }
     // clear interval on unmount
     return () => {
@@ -238,16 +240,16 @@ export const Card: FunctionComponent<CardProps> = ({
               <AnimatedPiece
                 startingWidth={curStyle.container.width - curStyle.container.padding * 2}
                 ref={topAnimations}
-                overrideHeight={typed ? (Math.floor(firstDetail.length/10)+1) * 35: undefined}
+                overrideHeight={typed ? (Math.floor(firstDetail.length/(smallText ? 15 : 9))+1) * (smallText ? 25 : 35): undefined}
               >
                 <Flex centered>
                   <Flex row>
                     <Flex fullWidth >
-                      <Typewriter startFull={!typed} centered>
-                        <StyledText type={curStyle.text.details} style={{ color: firstColor }}>
+                      <StyledText type={smallText ? curStyle.text.smallText : curStyle.text.details} style={{ color: firstColor }}>
+                        <Typewriter speed={smallText ? 10 : 30} startFull={!typed} centered>
                           {firstDetail}
-                        </StyledText>
-                      </Typewriter>
+                        </Typewriter>
+                      </StyledText>
                     </Flex>
                 </Flex>
               </Flex>
@@ -341,6 +343,7 @@ const nonStyles = {
     text: {
       name: "body",
       details: "caption",
+      smallText: "caption",
       description: "caption",
     },
     paceContainer: {
@@ -362,6 +365,7 @@ const nonStyles = {
     text: {
       name: "header",
       details: "body",
+      smallText: "caption",
       description: "caption",
     },
     paceContainer: {
