@@ -3,7 +3,7 @@ import React, {
   useImperativeHandle,
   forwardRef,
 } from "react";
-import { StyleSheet, Animated, ViewStyle, Easing, View } from "react-native";
+import { StyleSheet, Animated, ViewStyle, Easing, View, Dimensions, Platform } from "react-native";
 
 export type CardFlipProps = {
   style?: ViewStyle;
@@ -212,14 +212,15 @@ const CardFlipComponent: FunctionComponent<CardFlipProps> = (
   );
 };
 
+
 const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
-    position: "absolute",
-    left: 0,
-    top: 0,
-    bottom: 0,
-    right: 0,
+    position: 'absolute',
+    left: -1,
+    top: Platform.OS === 'ios' ? -Dimensions.get('window').height / 4 : -1,
+    right: -1,
+    bottom: -1,
   },
 });
 
