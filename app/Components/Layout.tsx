@@ -1,5 +1,5 @@
-import { View, ViewStyle } from "react-native";
-import React, { FunctionComponent, ReactNode } from "react";
+import {View, ViewStyle, StyleSheet} from 'react-native';
+import React, {FunctionComponent, ReactNode, memo} from 'react';
 
 // A component that makes it easy to create layout components, such as full-width, centered, row, etc
 type FlexProps = {
@@ -14,7 +14,7 @@ type FlexProps = {
   reverse?: boolean;
   flex?: number;
 };
-export const Flex: FunctionComponent<FlexProps> = ({
+export const Flex: FunctionComponent<FlexProps> = memo(({
   flex = undefined,
   full = false,
   fullWidth = false,
@@ -25,30 +25,24 @@ export const Flex: FunctionComponent<FlexProps> = ({
   wrap = false,
   reverse = false,
   children,
-}) => {
-  return (
-    <View
-      style={[
-        typeof flex === "number" ? { flex } : {},
-        full ? {flex: 1} : {},
-        fullWidth ? { width: "100%" } : {},
-        centered ? {
-          alignItems: "center",
-          justifyContent: "center",
-        } : {},
-        centeredVertical && row ? { alignItems: "center" } : {},
-        centeredVertical && !row ? { justifyContent: "center" } : {},
-        row ? { flexDirection: "row" } : {},
-        reverse && row ? { flexDirection: "row-reverse" } : {},
-        wrap ? { flexWrap: "wrap" } : {},
-        reverse && !row ? { flexDirection: "column-reverse" } : {},
-        style,
-      ]}
-    >
-      {children}
-    </View>
-  );
-};
+}) => (
+  <View
+    style={[
+      typeof flex === 'number' ? {flex} : undefined,
+      full && stylesFlex.full,
+      fullWidth && stylesFlex.fullWidth,
+      centered && stylesFlex.centered,
+      centeredVertical && row && stylesFlex.centeredVerticalRow,
+      centeredVertical && !row && stylesFlex.centeredVerticalCol,
+      row && stylesFlex.row,
+      reverse && row && stylesFlex.rowReverse,
+      wrap && stylesFlex.wrap,
+      reverse && !row && stylesFlex.colReverse,
+      style,
+    ]}>
+    {children}
+  </View>
+));
 
 // A component that makes padding less messy
 type PaddingProps = {
@@ -68,4 +62,17 @@ export const Padding: FunctionComponent<PaddingProps> = ({
     />
   );
 };
+
+const stylesFlex = StyleSheet.create({
+  full: {flex: 1},
+  fullWidth: {width: '100%'},
+  centered: {alignItems: 'center', justifyContent: 'center'},
+  centeredVerticalRow: {alignItems: 'center'},
+  centeredVerticalCol: {justifyContent: 'center'},
+  row: {flexDirection: 'row'},
+  rowReverse: {flexDirection: 'row-reverse'},
+  wrap: {flexWrap: 'wrap'},
+  colReverse: {flexDirection: 'column-reverse'},
+});
+
 

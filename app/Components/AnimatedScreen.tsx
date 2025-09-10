@@ -1,6 +1,6 @@
 // @ts-ignore-next-line
-import {Animated} from 'react-native';
-import React, {FunctionComponent, ReactNode, useRef} from 'react';
+import {Animated, StyleSheet} from 'react-native';
+import React, {FunctionComponent, ReactNode, useRef, useEffect} from 'react';
 import {easeOutBack} from '../Components';
 
 type AnimatedScreenProps = {
@@ -15,7 +15,7 @@ export const AnimatedScreen: FunctionComponent<AnimatedScreenProps> = ({
   const animatedScale = useRef(new Animated.Value(0.97)).current;
 
   //animate in the screen when the user navigates to it
-  React.useEffect(() => {
+  useEffect(() => {
     // fade in
     Animated.parallel([
       Animated.timing(animatedOpacity, {
@@ -37,19 +37,26 @@ export const AnimatedScreen: FunctionComponent<AnimatedScreenProps> = ({
         mass: 0.7,
       }),
     ]).start();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Animated.View
-      style={{
-        flex: 1,
-        transform: [
-          {translateY: animatedTranslate},
-          {scale: animatedScale},
-        ],
-        opacity: animatedOpacity,
-      }}>
+      style={[
+        stylesAnimatedScreen.container,
+        {
+          transform: [
+            {translateY: animatedTranslate},
+            {scale: animatedScale},
+          ],
+          opacity: animatedOpacity,
+        },
+      ]}>
       {children}
     </Animated.View>
   );
 };
+
+const stylesAnimatedScreen = StyleSheet.create({
+  container: {flex: 1},
+});

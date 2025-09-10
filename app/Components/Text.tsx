@@ -1,58 +1,80 @@
-import { Text, TextStyle, Animated, StyleSheet, LayoutChangeEvent } from "react-native";
-import React, {
-  FunctionComponent,
-  ReactNode,
-} from "react";
+import {
+  Text,
+  TextStyle,
+  Animated,
+  StyleSheet,
+  LayoutChangeEvent,
+} from 'react-native';
+import React, {FunctionComponent, ReactNode, memo} from 'react';
 
+// Public props for StyledText. Keep intentionally minimal.
 export type TextProps = {
-  style?: TextStyle | Animated.AnimatedProps<TextStyle>;
+  style?: TextStyle | TextStyle[]; // caller can still pass an array
   children?: ReactNode;
   onPress?: () => void;
-  type?: "header" | "body" | "caption" | "subscript" | "button";
-  animated?: boolean;
-  centered?: boolean;
+  type?: 'header' | 'body' | 'caption' | 'subscript' | 'button';
+  animated?: boolean; // if true uses Animated.Text for animated style interpolation
+  centered?: boolean; // quick horizontal centering helper
   onLayout?: (event: LayoutChangeEvent) => void;
 };
 
-// Our basic text component that integrates with our theme
-export const StyledText: FunctionComponent<TextProps> = (props) => {
-  // TODO get the current page name from redux
-  const curStyle = styles.Home
+// Single theme namespace (expandable later if multiple screens/themes emerge)
+// Keeping naming simple for readability.
+type VariantKey = 'header' | 'body' | 'caption' | 'subscript' | 'buttonText';
 
-  // setup style
-  const newProps = { ...props };
-  const { style = {}, type, animated } = props;
-  const centeredStyle:TextStyle = props.centered ? { textAlign: "center" } : {};
-  let typeStyle = {}
+// Readable, memo-friendly component. No functional changes from previous version.
+export const StyledText: FunctionComponent<TextProps> = memo(
+  ({style, type, animated, centered, children, ...rest}) => {
+    const theme = styles.Home; // placeholder for multi-page theming
 
-  // use the given type to lookup that text type style in our theme
-  if (type) {
-    const fullType = type === "button" ? "buttonText" : type;
-    typeStyle = curStyle[fullType]
-  }
+    // Map public 'button' to internal 'buttonText'
+    const internalKey: VariantKey | undefined = type
+      ? type === 'button'
+        ? 'buttonText'
+        : (type as VariantKey)
+      : undefined;
+    const variantStyle = internalKey ? (theme as any)[internalKey] : undefined;
+    const centeredStyle: TextStyle | undefined = centered
+      ? stylesCommon.centered
+      : undefined;
 
-  newProps.style = { ...curStyle.text, ...typeStyle, ...centeredStyle, ...style };
+    // Normalize user style into array for easier merging & performance
+    const userStyles = Array.isArray(style) ? style : style ? [style] : [];
+    const combined = [
+      theme.text,
+      variantStyle,
+      centeredStyle,
+      ...userStyles,
+    ].filter(Boolean);
 
-  if (animated) return <Animated.Text {...newProps} />;
-  // @ts-ignore-next-line - it doesn't know how to handle animated styles with the animated prop
-  else return <Text {...newProps} />;
-};
-
+    if (animated) {
+      return (
+        <Animated.Text {...rest} style={combined}>
+          {children}
+        </Animated.Text>
+      );
+    }
+    return (
+      <Text {...rest} style={combined}>
+        {children}
+      </Text>
+    );
+  },
+);
 
 const styles = {
   Home: StyleSheet.create({
     text: {
-      //color: "#4B296B",
-      color: "#FFFFFF",
+      color: '#FFFFFF',
     },
     subscript: {
       fontSize: 14,
       paddingTop: 10,
-      color: "#FFFFFF",
+      color: '#FFFFFF',
     },
     header: {
       fontSize: 45,
-      fontWeight: "bold" as "bold",
+      fontWeight: 'bold' as 'bold',
     },
     body: {
       fontSize: 26,
@@ -64,5 +86,9 @@ const styles = {
       fontSize: 14,
       paddingBottom: 2,
     },
-  })
-}
+  }),
+};
+
+const stylesCommon = StyleSheet.create({
+  centered: {textAlign: 'center'},
+});

@@ -1,11 +1,5 @@
-import {
-  FunctionComponent,
-  ReactElement,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import {Text} from 'react-native';
+import React, {FunctionComponent, ReactElement, useEffect, useRef, useState} from 'react';
+import {Text, Platform} from 'react-native';
 import {StyledText, TextProps} from './Text';
 
 // A restrictive text component that only allows strings as children
@@ -77,53 +71,56 @@ export const Typewriter: FunctionComponent<TypewriterProps> = props => {
   // type characters one at a time
   useEffect(() => {
     // if we are starting with the text fully typed out, skip the animation
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
     if (startFull) {
       setText(finalText.current);
       if (deleteAfter) {
-        setTimeout(() => {
+        timeouts.push(setTimeout(() => {
           setIsDone(true);
-        }, pauseTime);
+        }, pauseTime));
       } else {
         onFinish();
       }
-      return;
+      return () => timeouts.forEach(t => clearTimeout(t));
     }
     // type characters one at a time
     if (index <= finalText.current.length) {
-      setTimeout(() => {
+      timeouts.push(setTimeout(() => {
         setText(finalText.current.slice(0, index));
         setIndex(index + 1);
-      }, speed);
+      }, speed));
     }
     // done typing, wait for a bit and then delete the text
     else if (deleteAfter) {
-      setTimeout(() => {
+      timeouts.push(setTimeout(() => {
         setIsDone(true);
-      }, pauseTime);
+      }, pauseTime));
     } else {
       onFinish();
     }
-  }, [index]);
+    return () => timeouts.forEach(t => clearTimeout(t));
+  }, [index, deleteAfter, speed, pauseTime, onFinish, startFull]);
 
   // delete characters one at a time if deleteAfter is true
   useEffect(() => {
     if (isDone) {
-      setTimeout(() => {
+      const timeout = setTimeout(() => {
         setText(text.slice(0, text.length - 1));
         if (text.length === 0) {
           setIsDone(false);
           onFinish();
         }
       }, deleteSpeed);
+      return () => clearTimeout(timeout);
     }
-  }, [isDone, text]);
+  }, [isDone, text, deleteSpeed, onFinish]);
 
   // if deleteAfter is changed to true after the text is fully typed out, start deleting it
   useEffect(() => {
     if (deleteAfter && text.length === finalText.current.length) {
       setIsDone(true);
     }
-  }, [deleteAfter]);
+  }, [deleteAfter, text.length]);
 
   return (
     <Text
@@ -146,6 +143,7 @@ export const Typewriter: FunctionComponent<TypewriterProps> = props => {
 
 // turns the children of Typewriter into an array of single-character TWText components
 // updates to this should also update ./ScatteredText.tsx parseSubText
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const parseSubText = (
   text:
     | string
