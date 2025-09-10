@@ -10,8 +10,9 @@ type AnimatedScreenProps = {
 export const AnimatedScreen: FunctionComponent<AnimatedScreenProps> = ({
   children,
 }) => {
-  const animatedTop = useRef(new Animated.Value(150)).current;
+  const animatedTranslate = useRef(new Animated.Value(150)).current; // vertical slide distance
   const animatedOpacity = useRef(new Animated.Value(0)).current;
+  const animatedScale = useRef(new Animated.Value(0.97)).current;
 
   //animate in the screen when the user navigates to it
   React.useEffect(() => {
@@ -19,15 +20,21 @@ export const AnimatedScreen: FunctionComponent<AnimatedScreenProps> = ({
     Animated.parallel([
       Animated.timing(animatedOpacity, {
         toValue: 1,
-        duration: 850,
+        duration: 750,
         useNativeDriver: true,
       }),
-      // slide up
-      Animated.timing(animatedTop, {
+      Animated.timing(animatedTranslate, {
         toValue: 0,
         easing: easeOutBack,
-        duration: 850,
+        duration: 750,
         useNativeDriver: true,
+      }),
+      Animated.spring(animatedScale, {
+        toValue: 1,
+        useNativeDriver: true,
+        damping: 18,
+        stiffness: 180,
+        mass: 0.7,
       }),
     ]).start();
   }, []);
@@ -36,7 +43,10 @@ export const AnimatedScreen: FunctionComponent<AnimatedScreenProps> = ({
     <Animated.View
       style={{
         flex: 1,
-        transform: [{translateX: animatedTop}],
+        transform: [
+          {translateY: animatedTranslate},
+          {scale: animatedScale},
+        ],
         opacity: animatedOpacity,
       }}>
       {children}

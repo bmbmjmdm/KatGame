@@ -1,4 +1,10 @@
-import {StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+  Animated,
+} from 'react-native';
 import React, {
   FunctionComponent,
   ReactElement,
@@ -29,6 +35,7 @@ export type CardProps = {
   secondDetail?: string;
   game?: 'CardAndTextGame' | 'SingleCardGame';
   smallText?: boolean;
+  children?: React.ReactNode;
 };
 
 export const Card: FunctionComponent<CardProps> = ({
@@ -42,9 +49,11 @@ export const Card: FunctionComponent<CardProps> = ({
   smallText = false,
   game,
   onPress,
+  children,
 }) => {
   const curGame = game || 'SingleCardGame';
   const curStyle = {...styles[curGame], ...nonStyles[curGame]};
+  type TextVariant = 'header' | 'body' | 'caption' | 'subscript' | 'button';
 
   // a reference for each of the card's section's animation component
   const containerAnimations = useRef<AnimatedPieceFunctions>(null);
@@ -78,6 +87,7 @@ export const Card: FunctionComponent<CardProps> = ({
     }, 300);
   };
 
+  /* unused for now, but keep for later
   const swing = () => {
     const left = Math.random() > 0.5;
     containerAnimations.current?.swing({left, ...curStyle.paceContainer});
@@ -89,6 +99,7 @@ export const Card: FunctionComponent<CardProps> = ({
       botAnimations.current?.swing({left: !left, ...curStyle.paceContents});
     }, 50);
   };
+  */
 
   const jump = () => {
     containerAnimations.current?.jump(curStyle.jumpContainer);
@@ -158,6 +169,7 @@ export const Card: FunctionComponent<CardProps> = ({
         clearInterval(randomAnimationInterval.current);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // by default, a card has a gradient from top suit's color (or white) to the page's default color (usually black) to bottom suit's color (or white)
@@ -175,6 +187,29 @@ export const Card: FunctionComponent<CardProps> = ({
   const transparent = '#00000000';
   const absolute: ViewStyle = {position: 'absolute'};
 
+  // Press feedback (scale)
+  const pressAnim = useRef(new Animated.Value(0)).current;
+  const scale = pressAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 0.95],
+  });
+  const handlePressIn = () => {
+    Animated.spring(pressAnim, {
+      toValue: 1,
+      useNativeDriver: true,
+      speed: 20,
+      bounciness: 6,
+    }).start();
+  };
+  const handlePressOut = () => {
+    Animated.spring(pressAnim, {
+      toValue: 0,
+      useNativeDriver: true,
+      speed: 20,
+      bounciness: 6,
+    }).start();
+  };
+
   return (
     <AnimatedPiece
       animationComplete={() => {}}
@@ -187,166 +222,176 @@ export const Card: FunctionComponent<CardProps> = ({
       }
       overrideWidth={curStyle.container.width + curStyle.container.padding * 2}
       ref={containerAnimations}>
-      <TouchableOpacity activeOpacity={1} onPress={onPress}>
-        <View
-          style={[curStyle.container, absolute, {justifyContent: 'center'}]}>
-          <LinearGradient
-            style={[curStyle.verticalSideLine, absolute, {left: 0}]}
-            colors={[lineColor, transparent]}
-          />
-          <LinearGradient
-            style={[curStyle.verticalSideLine, absolute, {right: 0}]}
-            colors={[lineColor, transparent]}
-          />
-        </View>
-        <View style={[curStyle.container, absolute, {alignItems: 'center'}]}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        delayPressOut={40}>
+        <Animated.View style={{transform: [{scale}]}}>
           <View
-            style={[
-              curStyle.horizontalSideLine,
-              absolute,
-              {
-                top: 0,
-                backgroundColor: lineColor,
-              },
-            ]}
-          />
-        </View>
-        <View style={[curStyle.container, absolute]}>
-          {firstSuit && (
+            style={[curStyle.container, absolute, {justifyContent: 'center'}]}>
+            <LinearGradient
+              style={[curStyle.verticalSideLine, absolute, {left: 0}]}
+              colors={[lineColor, transparent]}
+            />
+            <LinearGradient
+              style={[curStyle.verticalSideLine, absolute, {right: 0}]}
+              colors={[lineColor, transparent]}
+            />
+          </View>
+          <View style={[curStyle.container, absolute, {alignItems: 'center'}]}>
             <View
               style={[
+                curStyle.horizontalSideLine,
                 absolute,
                 {
-                  top: -firstSuit?.props.height / 3,
-                  left: -firstSuit?.props.width / 3,
-                  transform: [{rotate: '-15deg'}],
+                  top: 0,
+                  backgroundColor: lineColor,
                 },
-              ]}>
-              {firstSuit}
-            </View>
-          )}
-          {secondSuit && (
-            <View
-              style={[
-                absolute,
-                {
-                  top: -secondSuit?.props.height / 3,
-                  right: -secondSuit?.props.width / 3,
-                  transform: [{rotate: '15deg'}],
-                },
-              ]}>
-              {secondSuit}
-            </View>
-          )}
-        </View>
-        <View style={curStyle.container}>
-          {name && (
-            <Flex flex={2} centered>
-              <AnimatedPiece
-                startingWidth={
-                  curStyle.container.width - curStyle.container.padding * 2
-                }
-                ref={nameAnimations}
-                overrideHeight={
-                  typed ? (Math.floor(name.length / 10) + 1) * 35 : undefined
-                }>
-                <Flex full>
-                  <Typewriter startFull={!typed} centered>
-                    <StyledText type={curStyle.text.name}>{name}</StyledText>
-                  </Typewriter>
-                </Flex>
-              </AnimatedPiece>
-            </Flex>
-          )}
-          {firstDetail && (
-            <Flex flex={1} centered>
-              <AnimatedPiece
-                startingWidth={
-                  curStyle.container.width - curStyle.container.padding * 2
-                }
-                ref={topAnimations}
-                overrideHeight={
-                  typed
-                    ? (Math.floor(firstDetail.length / (smallText ? 15 : 9)) +
-                        1) *
-                      (smallText ? 25 : 35)
-                    : undefined
-                }>
-                <Flex centered>
-                  <Flex row>
-                    <Flex fullWidth>
-                      <StyledText
-                        type={
-                          smallText
-                            ? curStyle.text.smallText
-                            : curStyle.text.details
-                        }
-                        style={{color: firstColor}}>
-                        <Typewriter
-                          speed={smallText ? 10 : 30}
-                          startFull={!typed}
-                          centered>
-                          {firstDetail}
-                        </Typewriter>
+              ]}
+            />
+          </View>
+          <View style={[curStyle.container, absolute]}>
+            {firstSuit && (
+              <View
+                style={[
+                  absolute,
+                  {
+                    top: -firstSuit?.props.height / 3,
+                    left: -firstSuit?.props.width / 3,
+                    transform: [{rotate: '-15deg'}],
+                  },
+                ]}>
+                {firstSuit}
+              </View>
+            )}
+            {secondSuit && (
+              <View
+                style={[
+                  absolute,
+                  {
+                    top: -secondSuit?.props.height / 3,
+                    right: -secondSuit?.props.width / 3,
+                    transform: [{rotate: '15deg'}],
+                  },
+                ]}>
+                {secondSuit}
+              </View>
+            )}
+          </View>
+          <View style={curStyle.container}>
+            {name && (
+              <Flex flex={2} centered>
+                <AnimatedPiece
+                  startingWidth={
+                    curStyle.container.width - curStyle.container.padding * 2
+                  }
+                  ref={nameAnimations}
+                  overrideHeight={
+                    typed ? (Math.floor(name.length / 10) + 1) * 35 : undefined
+                  }>
+                  <Flex full>
+                    <Typewriter startFull={!typed} centered>
+                      <StyledText type={curStyle.text.name as TextVariant}>
+                        {name}
                       </StyledText>
-                    </Flex>
+                    </Typewriter>
                   </Flex>
-                </Flex>
-              </AnimatedPiece>
-            </Flex>
-          )}
-          {secondDetail && (
-            <Flex flex={1} centered>
-              <AnimatedPiece
-                startingWidth={
-                  curStyle.container.width - curStyle.container.padding * 2
-                }
-                ref={botAnimations}
-                overrideHeight={
-                  typed
-                    ? (Math.floor(secondDetail.length / 10) + 1) * 35
-                    : undefined
-                }>
-                <Flex centered>
-                  <Flex row>
-                    {props.children}
-                    <Flex fullWidth>
-                      <Typewriter startFull={!typed} centered>
+                </AnimatedPiece>
+              </Flex>
+            )}
+            {firstDetail && (
+              <Flex flex={1} centered>
+                <AnimatedPiece
+                  startingWidth={
+                    curStyle.container.width - curStyle.container.padding * 2
+                  }
+                  ref={topAnimations}
+                  overrideHeight={
+                    typed
+                      ? (Math.floor(firstDetail.length / (smallText ? 15 : 9)) +
+                          1) *
+                        (smallText ? 25 : 35)
+                      : undefined
+                  }>
+                  <Flex centered>
+                    <Flex row>
+                      <Flex fullWidth>
                         <StyledText
-                          type={curStyle.text.details}
-                          style={{color: secondColor}}>
-                          {secondDetail}
+                          type={
+                            (smallText
+                              ? curStyle.text.smallText
+                              : curStyle.text.details) as TextVariant
+                          }
+                          style={{color: firstColor}}>
+                          <Typewriter
+                            speed={smallText ? 10 : 30}
+                            startFull={!typed}
+                            centered>
+                            {firstDetail}
+                          </Typewriter>
                         </StyledText>
-                      </Typewriter>
+                      </Flex>
                     </Flex>
                   </Flex>
-                </Flex>
-              </AnimatedPiece>
-            </Flex>
-          )}
-          {description && (
-            <Flex flex={2} centered>
-              <AnimatedPiece
-                startingWidth={
-                  curStyle.container.width - curStyle.container.padding * 2
-                }
-                ref={descriptionAnimations}
-                overrideHeight={
-                  typed
-                    ? (Math.floor(description.length / 10) + 1) * 35
-                    : undefined
-                }>
-                <Flex full>
-                  <Typewriter startFull={!typed} centered>
-                    <StyledText type={curStyle.text.description}>
-                      {description}
-                    </StyledText>
-                  </Typewriter>
-                </Flex>
-              </AnimatedPiece>
-            </Flex>
-          )}
-        </View>
+                </AnimatedPiece>
+              </Flex>
+            )}
+            {secondDetail && (
+              <Flex flex={1} centered>
+                <AnimatedPiece
+                  startingWidth={
+                    curStyle.container.width - curStyle.container.padding * 2
+                  }
+                  ref={botAnimations}
+                  overrideHeight={
+                    typed
+                      ? (Math.floor(secondDetail.length / 10) + 1) * 35
+                      : undefined
+                  }>
+                  <Flex centered>
+                    <Flex row>
+                      {children}
+                      <Flex fullWidth>
+                        <Typewriter startFull={!typed} centered>
+                          <StyledText
+                            type={curStyle.text.details as TextVariant}
+                            style={{color: secondColor}}>
+                            {secondDetail}
+                          </StyledText>
+                        </Typewriter>
+                      </Flex>
+                    </Flex>
+                  </Flex>
+                </AnimatedPiece>
+              </Flex>
+            )}
+            {description && (
+              <Flex flex={2} centered>
+                <AnimatedPiece
+                  startingWidth={
+                    curStyle.container.width - curStyle.container.padding * 2
+                  }
+                  ref={descriptionAnimations}
+                  overrideHeight={
+                    typed
+                      ? (Math.floor(description.length / 10) + 1) * 35
+                      : undefined
+                  }>
+                  <Flex full>
+                    <Typewriter startFull={!typed} centered>
+                      <StyledText
+                        type={curStyle.text.description as TextVariant}>
+                        {description}
+                      </StyledText>
+                    </Typewriter>
+                  </Flex>
+                </AnimatedPiece>
+              </Flex>
+            )}
+          </View>
+        </Animated.View>
       </TouchableOpacity>
     </AnimatedPiece>
   );
