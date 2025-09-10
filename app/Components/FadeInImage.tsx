@@ -1,5 +1,5 @@
-import { Animated, ImageProps, ActivityIndicator, View } from "react-native";
-import React, { FunctionComponent } from "react";
+import {Animated, ImageProps, ActivityIndicator, View} from 'react-native';
+import React, {FunctionComponent} from 'react';
 
 // A wrapper for the react-native Image component that fades it in when it loads
 // Overwrites opacity style prop
@@ -8,11 +8,11 @@ type FadeInImageProps = (ImageProps | Animated.AnimatedProps<ImageProps>) & {
   spinner?: boolean;
 };
 
-export const FadeInImage: FunctionComponent<FadeInImageProps> = (props) => {
+export const FadeInImage: FunctionComponent<FadeInImageProps> = props => {
   // fade in after load
-  const opacityObj = React.useRef({ opacity: new Animated.Value(0) }).current;
+  const opacityObj = React.useRef({opacity: new Animated.Value(0)}).current;
   const opacitySpinner = React.useRef(
-    new Animated.Value(props.spinner ? 1 : 0)
+    new Animated.Value(props.spinner ? 1 : 0),
   ).current;
 
   // merge animated opacity style into props
@@ -33,20 +33,18 @@ export const FadeInImage: FunctionComponent<FadeInImageProps> = (props) => {
         style={[
           props.style,
           {
-            position: "absolute",
-            justifyContent: "center",
-            alignItems: "center",
+            position: 'absolute',
+            justifyContent: 'center',
+            alignItems: 'center',
             opacity: opacitySpinner,
           },
-        ]}
-      >
-        <ActivityIndicator color={"#AAAAAA"} />
+        ]}>
+        <ActivityIndicator color={'#AAAAAA'} />
       </Animated.View>
       <Animated.Image
         {...props}
         style={newStyle}
-        onLoad={(arg) => {
-          
+        onLoad={arg => {
           props.onLoad?.(arg);
           Animated.timing(opacitySpinner, {
             toValue: 0,
@@ -59,7 +57,6 @@ export const FadeInImage: FunctionComponent<FadeInImageProps> = (props) => {
             useNativeDriver: false,
           }).start();
         }}
-        
       />
     </View>
   );

@@ -1,17 +1,18 @@
-import { FunctionComponent, ReactElement, useEffect, useRef, useState } from "react";
-import { Text } from "react-native";
-import { StyledText, TextProps } from "./Text";
-
-
-
-
-
+import {
+  FunctionComponent,
+  ReactElement,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import {Text} from 'react-native';
+import {StyledText, TextProps} from './Text';
 
 // A restrictive text component that only allows strings as children
 type TWTextProps = TextProps & {
   children: string;
 };
-export const TWText: FunctionComponent<TWTextProps> = (props) => {
+export const TWText: FunctionComponent<TWTextProps> = props => {
   return <StyledText {...props} />;
 };
 
@@ -38,7 +39,7 @@ export type TypewriterProps = TextProps & {
   // center horizontally
   centered?: boolean;
 };
-export const Typewriter: FunctionComponent<TypewriterProps> = (props) => {
+export const Typewriter: FunctionComponent<TypewriterProps> = props => {
   const {
     children,
     deleteAfter = false,
@@ -55,18 +56,18 @@ export const Typewriter: FunctionComponent<TypewriterProps> = (props) => {
   useEffect(() => {
     if (lastChildren.current !== children) {
       lastChildren.current = children;
-      finalText.current = children as string//parseSubText(children);
+      finalText.current = children as string; //parseSubText(children);
       setIndex(0);
-      setText("");
+      setText('');
     }
-  }, [children])
+  }, [children]);
 
   // text visible on screen
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
   const [index, setIndex] = useState(0);
   const [isDone, setIsDone] = useState(false);
   // what our final text will look like, represented as an array of single-charcter TWText components
-  const finalText = useRef<string>(children as string)
+  const finalText = useRef<string>(children as string);
   /*useRef<ReactElement<TWTextProps>[]>(
     parseSubText(children)
   );*/
@@ -122,7 +123,11 @@ export const Typewriter: FunctionComponent<TypewriterProps> = (props) => {
     }
   }, [deleteAfter]);
 
-  return <Text {...props} style={{textAlign: centered ? 'center' : undefined}}>{text}</Text>;
+  return (
+    <Text {...props} style={{textAlign: centered ? 'center' : undefined}}>
+      {text}
+    </Text>
+  );
 };
 
 // turns the children of Typewriter into an array of single-character TWText components
@@ -131,15 +136,17 @@ const parseSubText = (
   text:
     | string
     | ReactElement<TWTextProps>
-    | (string | ReactElement<TWTextProps>)[]
+    | (string | ReactElement<TWTextProps>)[],
 ): ReactElement<TWTextProps>[] => {
-  if (typeof text === "string") {
-    return text.split("").map((char) => <TWText key={Math.random()}>{char}</TWText>);
+  if (typeof text === 'string') {
+    return text
+      .split('')
+      .map(char => <TWText key={Math.random()}>{char}</TWText>);
   } else if (Array.isArray(text)) {
-    return text.map((subText) => parseSubText(subText)).flat();
+    return text.map(subText => parseSubText(subText)).flat();
   } else {
-    const slimmedProps = { ...text.props, children: undefined };
-    return text.props.children.split("").map((char) => (
+    const slimmedProps = {...text.props, children: undefined};
+    return text.props.children.split('').map(char => (
       <TWText {...slimmedProps} key={Math.random()}>
         {char}
       </TWText>

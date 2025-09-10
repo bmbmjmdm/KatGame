@@ -1,5 +1,11 @@
-import { Animated, Easing } from "react-native";
-import React, { FunctionComponent, useRef, useEffect, useImperativeHandle, ForwardRefRenderFunction } from "react";
+import {Animated, Easing} from 'react-native';
+import React, {
+  FunctionComponent,
+  useRef,
+  useEffect,
+  useImperativeHandle,
+  ForwardRefRenderFunction,
+} from 'react';
 
 type AnimatedPieceProps = {
   children: React.ReactNode;
@@ -10,22 +16,32 @@ type AnimatedPieceProps = {
   startingWidth?: number;
 };
 
-const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, AnimatedPieceProps> = (props, ref) => {
+const AnimatedPieceComponent: ForwardRefRenderFunction<
+  AnimatedPieceFunctions,
+  AnimatedPieceProps
+> = (props, ref) => {
   // We can be given a starting height/width to avoid hiding the piece until initial layout.
   // This is advised if it's known that the piece will be animated in from a fixed size.
   // When you do this, be sure to include padding with the width/height!
-  const givenStartingLayout = Boolean(props.startingWidth && props.startingHeight);
-  const animatedOpacity = useRef(new Animated.Value(givenStartingLayout ? 1 : 0)).current;
+  const givenStartingLayout = Boolean(
+    props.startingWidth && props.startingHeight,
+  );
+  const animatedOpacity = useRef(
+    new Animated.Value(givenStartingLayout ? 1 : 0),
+  ).current;
   const animatedX = useRef(new Animated.Value(0)).current;
   const animatedY = useRef(new Animated.Value(0)).current;
   const animatedRotate = useRef(new Animated.Value(0)).current;
   const animatedScale = useRef(new Animated.Value(1)).current;
-  const calculatedWidth = useRef(new Animated.Value(props.startingWidth || 0)).current;
-  const calculatedHeight = useRef(new Animated.Value(props.startingHeight || 0)).current;
+  const calculatedWidth = useRef(
+    new Animated.Value(props.startingWidth || 0),
+  ).current;
+  const calculatedHeight = useRef(
+    new Animated.Value(props.startingHeight || 0),
+  ).current;
   const initialLayoutComplete = useRef(givenStartingLayout);
 
-  const discard = () => {
-  }
+  const discard = () => {};
 
   // rotate the piece a little clockwise and counter clockwise rapidly
   const shake = (severity = 0.03) => {
@@ -79,11 +95,10 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
         duration: 100,
         useNativeDriver: true,
       }),
-    ]).start()
-  }
+    ]).start();
+  };
 
-  const drawn = () => {
-  }
+  const drawn = () => {};
 
   // zoom out quick, suspend, and zoome back in
   const zoomOutAndBackIn = () => {
@@ -102,15 +117,16 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
         easing: Easing.exp,
         useNativeDriver: true,
       }),
-    ]).start()
-  }
+    ]).start();
+  };
 
   // drag the piece to a random side slowly, then drag it back
-  const pace = (props?:PaceProps) => {
-    const left = typeof props?.left === "boolean" ? props.left : Math.random() > 0.5
-    const distance = props?.distance || 100
-    const secondsLength = props?.secondsLength || 1000
-  
+  const pace = (props?: PaceProps) => {
+    const left =
+      typeof props?.left === 'boolean' ? props.left : Math.random() > 0.5;
+    const distance = props?.distance || 100;
+    const secondsLength = props?.secondsLength || 1000;
+
     Animated.sequence([
       Animated.timing(animatedX, {
         // pick a side and slide horizontally slowly
@@ -125,20 +141,21 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
         duration: 3 * secondsLength,
         useNativeDriver: true,
       }),
-    ]).start()
-  }
+    ]).start();
+  };
 
   // drag the piece to a random side quickly, then drag it back and to the other side, then back to center
-  const swing = (props?:PaceProps) => {
-    const left = typeof props?.left === "boolean" ? props.left : Math.random() > 0.5
-    const distance = props?.distance || 100
-    const secondsLength = props?.secondsLength || 1000
-  
+  const swing = (props?: PaceProps) => {
+    const left =
+      typeof props?.left === 'boolean' ? props.left : Math.random() > 0.5;
+    const distance = props?.distance || 100;
+    const secondsLength = props?.secondsLength || 1000;
+
     Animated.sequence([
       Animated.parallel([
         Animated.timing(animatedRotate, {
           // pick a side and slide horizontally slowly
-          toValue: 0.10 * (left ? -1 : 1),
+          toValue: 0.1 * (left ? -1 : 1),
           duration: 0.33 * secondsLength,
           useNativeDriver: true,
         }),
@@ -176,16 +193,16 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
           duration: 0.33 * secondsLength,
           useNativeDriver: true,
         }),
-      ])
-    ]).start()
-  }
+      ]),
+    ]).start();
+  };
 
   // fling up, starting to shake half way, then fall down, bouncing back into place (vertically and rotationally) as you land
   // currently the props only affect the jump portion of jumpShake
-  const jumpShake = (props?:JumpProps) => {
-      const inverse = props?.inverse
-      const distance = props?.distance || 50
-      const secondsLength = props?.secondsLength || 1000
+  const jumpShake = (props?: JumpProps) => {
+    const inverse = props?.inverse;
+    const distance = props?.distance || 50;
+    const secondsLength = props?.secondsLength || 1000;
 
     // parallel shake and jump
     Animated.parallel([
@@ -241,15 +258,15 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
           easing: Easing.bounce,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     ]).start();
-  }
+  };
 
   // fling a piece upwards, then drop it back down
-  const jump = (props?:JumpProps) => {
-    const inverse = props?.inverse
-    const distance = props?.distance || 100
-    const secondsLength = props?.secondsLength || 1000
+  const jump = (props?: JumpProps) => {
+    const inverse = props?.inverse;
+    const distance = props?.distance || 100;
+    const secondsLength = props?.secondsLength || 1000;
 
     Animated.sequence([
       // go up, decelerating
@@ -267,7 +284,7 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
         useNativeDriver: true,
       }),
     ]).start();
-  }
+  };
 
   // fall directly downward, then fade in where it originally was
   const fallOffAndRespawn = () => {
@@ -315,16 +332,16 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
           toValue: 0,
           duration: 1,
           useNativeDriver: true,
-        })
+        }),
       ]),
       // now that its reset, fade it back in
       Animated.timing(animatedOpacity, {
         toValue: 1,
         duration: 700,
         useNativeDriver: true,
-      })
+      }),
     ]).start();
-  }
+  };
 
   // expose all of our animation functions to our parent
   useImperativeHandle(ref, () => ({
@@ -339,77 +356,83 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
     swing,
   }));
 
-
   return (
     // Outermost container is relatively positioned and either:
     // - adjusts its width/height to fit the floating innards
     // - adjusts its width/height for an animation or parent's desire
-    <Animated.View style={{
-      width: props.overrideWidth || calculatedWidth,
-      height: props.overrideHeight || calculatedHeight,
-    }}>
+    <Animated.View
+      style={{
+        width: props.overrideWidth || calculatedWidth,
+        height: props.overrideHeight || calculatedHeight,
+      }}>
       {
         // The inner container is floating and contains all the passed-in children
         // This is wehre we apply all or most animations, so that we can move it around, scale it, etc without affecting sibling components
       }
-      <Animated.View 
+      <Animated.View
         style={{
-          position: "absolute",
+          position: 'absolute',
           opacity: animatedOpacity,
           transform: [
-            { translateX: animatedX },
-            { translateY: animatedY },
-            { rotate: animatedRotate.interpolate({
-              inputRange: [-1, 0, 1],
-              outputRange: ["-360deg", "0deg", "360deg"]
-            })},
-            { scale: animatedScale},
+            {translateX: animatedX},
+            {translateY: animatedY},
+            {
+              rotate: animatedRotate.interpolate({
+                inputRange: [-1, 0, 1],
+                outputRange: ['-360deg', '0deg', '360deg'],
+              }),
+            },
+            {scale: animatedScale},
           ],
         }}
-        onLayout={(e) => {
+        onLayout={e => {
           // Here we keep our outer container in sync with the inner container's width/height
-          if (!props.overrideWidth) calculatedWidth.setValue(e.nativeEvent.layout.width);
-          if (!props.overrideHeight) calculatedHeight.setValue(e.nativeEvent.layout.height);
+          if (!props.overrideWidth)
+            calculatedWidth.setValue(e.nativeEvent.layout.width);
+          if (!props.overrideHeight)
+            calculatedHeight.setValue(e.nativeEvent.layout.height);
           if (!initialLayoutComplete.current) {
             // On initial layout our opacity is 0 so that we can update our width/height before the user sees it
             animatedOpacity.setValue(1);
             initialLayoutComplete.current = true;
           }
-        }}
-      >
+        }}>
         {
           // finally, the actual content
           props.children
         }
       </Animated.View>
     </Animated.View>
-  )
+  );
 };
 
 export type AnimatedPieceFunctions = {
   discard: () => void;
-  shake: (props?:ShakeProps) => void;
+  shake: (props?: ShakeProps) => void;
   drawn: () => void;
-  pace: (props?:PaceProps) => void;
-  jump: (props?:JumpProps) => void;
+  pace: (props?: PaceProps) => void;
+  jump: (props?: JumpProps) => void;
   fallOffAndRespawn: () => void;
-  jumpShake: (props?:JumpProps) => void;
+  jumpShake: (props?: JumpProps) => void;
   zoomOutAndBackIn: () => void;
-  swing: (props?:PaceProps) => void;
-}
+  swing: (props?: PaceProps) => void;
+};
 
 type PaceProps = {
-  left?: boolean,
-  distance?: number,
-  secondsLength?: number
-}
+  left?: boolean;
+  distance?: number;
+  secondsLength?: number;
+};
 
-type ShakeProps = number
+type ShakeProps = number;
 
 type JumpProps = {
-  inverse?: boolean,
-  distance?: number,
-  secondsLength?: number
-}
+  inverse?: boolean;
+  distance?: number;
+  secondsLength?: number;
+};
 
-export const AnimatedPiece = React.forwardRef<AnimatedPieceFunctions, AnimatedPieceProps>(AnimatedPieceComponent);
+export const AnimatedPiece = React.forwardRef<
+  AnimatedPieceFunctions,
+  AnimatedPieceProps
+>(AnimatedPieceComponent);
