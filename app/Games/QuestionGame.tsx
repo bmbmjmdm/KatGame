@@ -266,6 +266,10 @@ const questions = [
 
 const romantic = [
   {
+    text: 'Compliment Duel - Trade authentic compliments; first to hesitate for a few seconds loses.',
+    icon: gameIcon,
+  },
+  {
     text: "Tell me why I'm cute",
     icon: heartIcon,
   },
@@ -418,7 +422,6 @@ const games = [
   {
     text: 'Blind Draw Charades - I draw something with my eyes closed, you have to guess what it is',
     icon: gameIcon,
-    smallText: true,
   },
   {
     text: 'Would You Rather?',
@@ -451,12 +454,35 @@ const games = [
   {
     text: 'Half-Life - Act out a scene in 1 minute, then again in 30 seconds, then 15, then 5',
     icon: gameIcon,
-    smallText: true,
   },
   {
     text: 'Fastforward - Start a scene, eventually someone CLAPS, then the scene instantly changes to a future scene with the same actors.',
     icon: gameIcon,
     smallText: true,
   },
-  // new games
+  {
+    text: '10 Answers - I think of something and give clues until you guess it. Then you go. Each time we swap the word must be harder to guess. We have 3 minutes to get 10.',
+    icon: gameIcon,
+    smallText: true,
+  },
+  {
+    text: 'Sudden Direction - Start a scene; every CLAP changes the last sentence to a new emotion, genre, or etc.',
+    icon: gameIcon,
+    smallText: true,
+  },
+  {
+    text: 'Snakeoil - Makeup an invention by combining 2 random words and sell me on it while I ask questions',
+    icon: gameIcon,
+    smallText: true,
+  },
+  {
+    text: "I'm a potato - Have a conversation about a mundane topic using only metaphors. Afterwards guess the topic.",
+    icon: gameIcon,
+    smallText: true,
+  },
+  {
+    text: "Yes, but - Start with a mundane story, then alternate changing details/events until eventually it's absurd",
+    icon: gameIcon,
+    smallText: true,
+  },
 ];

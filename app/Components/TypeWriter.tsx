@@ -1,4 +1,10 @@
-import React, {FunctionComponent, ReactElement, useEffect, useRef, useState} from 'react';
+import React, {
+  FunctionComponent,
+  ReactElement,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {Text, Platform} from 'react-native';
 import {StyledText, TextProps} from './Text';
 
@@ -75,9 +81,11 @@ export const Typewriter: FunctionComponent<TypewriterProps> = props => {
     if (startFull) {
       setText(finalText.current);
       if (deleteAfter) {
-        timeouts.push(setTimeout(() => {
-          setIsDone(true);
-        }, pauseTime));
+        timeouts.push(
+          setTimeout(() => {
+            setIsDone(true);
+          }, pauseTime),
+        );
       } else {
         onFinish();
       }
@@ -85,16 +93,20 @@ export const Typewriter: FunctionComponent<TypewriterProps> = props => {
     }
     // type characters one at a time
     if (index <= finalText.current.length) {
-      timeouts.push(setTimeout(() => {
-        setText(finalText.current.slice(0, index));
-        setIndex(index + 1);
-      }, speed));
+      timeouts.push(
+        setTimeout(() => {
+          setText(finalText.current.slice(0, index));
+          setIndex(index + 1);
+        }, speed),
+      );
     }
     // done typing, wait for a bit and then delete the text
     else if (deleteAfter) {
-      timeouts.push(setTimeout(() => {
-        setIsDone(true);
-      }, pauseTime));
+      timeouts.push(
+        setTimeout(() => {
+          setIsDone(true);
+        }, pauseTime),
+      );
     } else {
       onFinish();
     }
