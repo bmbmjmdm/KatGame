@@ -1,4 +1,3 @@
-import {View} from 'react-native';
 import React, {FunctionComponent, useEffect, useRef, useState} from 'react';
 import {
   wingIcon,
@@ -8,7 +7,7 @@ import {
   questionIcon,
   gameIcon,
 } from '../Components/Icons';
-import {Card, Flex, CardProps, AnimatedScreen} from '../Components';
+import {Card, Flex, AnimatedScreen} from '../Components';
 import {CardFlip} from '../Components/CardFlip';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -141,6 +140,10 @@ const physical = [
 
 const musicalOrRP = [
   {
+    text: 'Make a sound. I have to guess what it is',
+    icon: gameIcon,
+  },
+  {
     text: 'Sing something',
     icon: musicIcon,
   },
@@ -229,10 +232,6 @@ const questions = [
   },
   {
     text: "Create a social norm or custom (can't just cancel one out)",
-    icon: questionIcon,
-  },
-  {
-    text: 'Pretend to be an expert on ___ while I ask you questions about it',
     icon: questionIcon,
   },
   {
@@ -379,7 +378,7 @@ const games = [
     smallText: true,
   },
   {
-    text: "Secret - We both think of characters to roleplay as. You have a secret you don't want me to find out. You also have an obvious tell when you're lying. I have 5 minutes to find the secret.",
+    text: "\nSecret - We both think of characters to roleplay as. You have a secret you don't want me to find out. You also have an obvious tell when you're lying. I have 5 minutes to find the secret.",
     icon: gameIcon,
     smallText: true,
   },
@@ -396,4 +395,68 @@ const games = [
     icon: gameIcon,
     smallText: true,
   },
+  {
+    text: 'Pretend to be an expert on ___ while I ask you questions about it',
+    icon: gameIcon,
+  },
+  {
+    text: 'Charades - You act out a word, I have to guess.',
+    icon: gameIcon,
+  },
+  {
+    text: 'Story Chain - We take turns adding one sentence to a story.',
+    icon: gameIcon,
+  },
+  {
+    text: '20 Questions',
+    icon: gameIcon,
+  },
+  {
+    text: 'Draw It Blind - I draw with my eyes closed as you tell me what to draw',
+    icon: gameIcon,
+  },
+  {
+    text: 'Blind Draw Charades - I draw something with my eyes closed, you have to guess what it is',
+    icon: gameIcon,
+    smallText: true,
+  },
+  {
+    text: 'Would You Rather?',
+    icon: gameIcon,
+  },
+  {
+    text: 'Draw Story - I draw and you have to describe it as a story',
+    icon: gameIcon,
+  },
+  {
+    text: 'Two truths and a lie',
+    icon: gameIcon,
+  },
+  {
+    text: 'Make an improv scene together',
+    icon: gameIcon,
+  },
+  {
+    text: 'Create a black story for me to solve',
+    icon: gameIcon,
+  },
+  {
+    text: "Direction - Act out a normal scene, then I'll give you a direction to change it.",
+    icon: gameIcon,
+  },
+  {
+    text: 'Sound Effects - One person acts, the other provides all the sound effects',
+    icon: gameIcon,
+  },
+  {
+    text: 'Half-Life - Act out a scene in 1 minute, then again in 30 seconds, then 15, then 5',
+    icon: gameIcon,
+    smallText: true,
+  },
+  {
+    text: 'Fastforward - Start a scene, eventually someone CLAPS, then the scene instantly changes to a future scene with the same actors.',
+    icon: gameIcon,
+    smallText: true,
+  },
+  // new games
 ];

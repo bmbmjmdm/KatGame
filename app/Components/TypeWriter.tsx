@@ -68,6 +68,8 @@ export const Typewriter: FunctionComponent<TypewriterProps> = props => {
   const [isDone, setIsDone] = useState(false);
   // what our final text will look like, represented as an array of single-charcter TWText components
   const finalText = useRef<string>(children as string);
+  const isTextLong = finalText.current.length > 100;
+  const isTextSuperLong = finalText.current.length > 180;
   /*useRef<ReactElement<TWTextProps>[]>(
     parseSubText(children)
   );*/
@@ -124,7 +126,19 @@ export const Typewriter: FunctionComponent<TypewriterProps> = props => {
   }, [deleteAfter]);
 
   return (
-    <Text {...props} style={{textAlign: centered ? 'center' : undefined}}>
+    <Text
+      {...props}
+      style={{
+        textAlign: centered ? 'center' : undefined,
+        fontFamily: Platform.select({
+          ios: 'Menlo',
+          android: 'monospace',
+          default: 'monospace',
+        }),
+        letterSpacing: isTextLong ? 1 : 2,
+        lineHeight: isTextLong ? 30 : 35,
+        fontSize: isTextSuperLong ? 15 : isTextLong ? 17 : undefined,
+      }}>
       {text}
     </Text>
   );
